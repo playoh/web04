@@ -9,7 +9,7 @@ public class JDBCUtil {
         Connection con=null;
         try{
             Class.forName("org.mariadb.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mariadb://walab.handong.edu:8080/W25_22400445", "W25_22400445", "chui2E");
+            con = DriverManager.getConnection("jdbc:mariadb://walab.handong.edu:3306/W25_22400445", "W25_22400445", "chui2E");
         }catch(Exception e){
             System.out.println(e);
         }
