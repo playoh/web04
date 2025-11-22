@@ -35,7 +35,6 @@
 <body>
 
     <h1>게시판 웹 애플리케이션</h1>
-    <p><em>(Note: Some pages like view, edit, delete, and *_ok pages require specific parameters to function correctly. Accessing them directly from here might result in errors.)</em></p>
     <div class="button-container">
         <a href="list.jsp">게시글 목록 보기 (list.jsp)</a>
         <a href="write.jsp">새 게시글 작성 (write.jsp)</a>
