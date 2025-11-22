@@ -39,9 +39,9 @@
     <div class="button-container">
         <a href="list.jsp">게시글 목록 보기 (list.jsp)</a>
         <a href="write.jsp">새 게시글 작성 (write.jsp)</a>
-        <a href="view.jsp">게시글 상세 보기 (view.jsp)</a>
-        <a href="edit.jsp">게시글 수정 (edit.jsp)</a>
-        <a href="delete_ok.jsp">게시글 삭제 처리 (delete_ok.jsp)</a>
+        <a href="view.jsp?id=5">게시글 상세 보기 (view.jsp)</a>
+        <a href="edit.jsp?id=5">게시글 수정 (edit.jsp)</a>
+        <a href="delete_ok.jsp?id=5">게시글 삭제 처리 (delete_ok.jsp)</a>
         <a href="write_ok.jsp">게시글 작성 처리 (write_ok.jsp)</a>
         <a href="edit_ok.jsp">게시글 수정 처리 (edit_ok.jsp)</a>
     </div>
