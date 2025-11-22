@@ -37,12 +37,7 @@
         }
     </style>
     <script>
-        function delete_ok(id){
-            var a = confirm("정말로 삭제하겠습니까?");
-            if(a) {
-                location.href='deletepost.jsp?id=' + id;
-            }
-        }
+        // No longer needed
     </script>
 </head>
 <body>
@@ -78,7 +73,7 @@
         <td><%= u.getContent() %></td>
         <td><%= u.getRegdate() %></td>
         <td><a href="edit.jsp?id=<%= u.getSeq() %>">Edit</a></td>
-        <td><a href="javascript:delete_ok('<%= u.getSeq() %>')">Delete</a></td>
+        <td><a href="delete_ok.jsp?id=<%= u.getSeq() %>">Delete</a></td>
     </tr>
     <%
             }
