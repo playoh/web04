@@ -16,6 +16,7 @@ public class JDBCUtil {
         return con;
     }
 
+
     public static void main(String ars[]) {
         Connection conn = getConnection();
         if(conn != null)
