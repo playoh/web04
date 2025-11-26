@@ -17,8 +17,8 @@ public class BoardDAO {
     PreparedStatement stmt = null;
     ResultSet rs = null;
 
-    private final String BOARD_INSERT = "insert into BOARD (category, title, writer, content) values (?,?,?,?)";
-    private final String BOARD_UPDATE = "update BOARD set category=?, title=?, writer=?, content=? where seq=?";
+    private final String BOARD_INSERT = "insert into BOARD (category, title, writer, content, photo) values (?,?,?,?,?)";
+    private final String BOARD_UPDATE = "update BOARD set category=?, title=?, writer=?, content=?, photo=? where seq=?";
     private final String BOARD_DELETE = "delete from BOARD  where seq=?";
     private final String BOARD_GET = "select * from BOARD  where seq=?";
     private final String BOARD_LIST = "select * from BOARD order by seq desc";
@@ -32,6 +32,7 @@ public class BoardDAO {
             stmt.setString(2, vo.getTitle());
             stmt.setString(3, vo.getWriter());
             stmt.setString(4, vo.getContent());
+            stmt.setString(5, vo.getPhoto());
             stmt.executeUpdate();
             return 1;
         } catch (Exception e) {
@@ -61,10 +62,11 @@ public class BoardDAO {
             stmt.setString(2, vo.getTitle());
             stmt.setString(3, vo.getWriter());
             stmt.setString(4, vo.getContent());
-            stmt.setInt(5, vo.getSeq());
+            stmt.setString(5, vo.getPhoto());
+            stmt.setInt(6, vo.getSeq());
 
 
-            System.out.println(vo.getCategory() + "-" + vo.getTitle() + "-" + vo.getWriter() + "-" + vo.getContent() + "-" + vo.getSeq());
+            System.out.println(vo.getCategory() + "-" + vo.getTitle() + "-" + vo.getWriter() + "-" + vo.getContent() + "-" + vo.getPhoto() + "-" + vo.getSeq());
             stmt.executeUpdate();
             return 1;
 
@@ -88,6 +90,7 @@ public class BoardDAO {
                 one.setTitle(rs.getString("title"));
                 one.setWriter(rs.getString("writer"));
                 one.setContent(rs.getString("content"));
+                one.setPhoto(rs.getString("photo"));
                 one.setCnt(rs.getInt("cnt"));
             }
             rs.close();
@@ -112,6 +115,7 @@ public class BoardDAO {
                 one.setWriter(rs.getString("writer"));
                 one.setContent(rs.getString("content"));
                 one.setRegdate(rs.getDate("regdate"));
+                one.setPhoto(rs.getString("photo"));
                 one.setCnt(rs.getInt("cnt"));
                 list.add(one);
             }

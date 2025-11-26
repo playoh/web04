@@ -1,81 +1,89 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
-<%@ page import="org.example.ihateweb04.dao.BoardDAO, org.example.ihateweb04.bean.BoardVO" %>
+<%@ page import="org.apache.commons.fileupload.FileItem" %>
+<%@ page import="org.apache.commons.fileupload.disk.DiskFileItemFactory" %>
+<%@ page import="org.apache.commons.fileupload.servlet.ServletFileUpload" %>
+<%@ page import="org.example.ihateweb04.bean.BoardVO" %>
+<%@ page import="org.example.ihateweb04.dao.BoardDAO" %>
+<%@ page import="java.io.File" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.lang.System" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
     request.setCharacterEncoding("UTF-8");
 
-    // "confirm" 액션이 있을 경우에만 실제 DB에 저장
-    if ("confirm".equals(request.getParameter("action"))) {
-        BoardVO vo = new BoardVO();
-        vo.setCategory(request.getParameter("category"));
-        vo.setTitle(request.getParameter("title"));
-        vo.setWriter(request.getParameter("writer"));
-        vo.setContent(request.getParameter("content"));
+    BoardVO vo = new BoardVO();
+    BoardDAO dao = new BoardDAO();
 
-        BoardDAO dao = new BoardDAO();
-        dao.insertBoard(vo);
+    String filename = "";
+    String uploadPath = application.getRealPath("upload");
 
-        response.sendRedirect("list.jsp");
-        return;
-    }
+    if (ServletFileUpload.isMultipartContent(request)) {
+        try {
+            List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+            for (FileItem item : items) {
+                if (item.isFormField()) {
+                    // 폼 필드 처리
+                    String fieldName = item.getFieldName();
+                    String value = item.getString("UTF-8");
+                    if ("category".equals(fieldName)) {
+                        vo.setCategory(value);
+                    } else if ("title".equals(fieldName)) {
+                        vo.setTitle(value);
+                    } else if ("writer".equals(fieldName)) {
+                        vo.setWriter(value);
+                    } else if ("content".equals(fieldName)) {
+                        vo.setContent(value);
+                    }
+                } else {
+                    // 파일 처리
+                    String fieldName = item.getFieldName();
+                    String contentType = item.getContentType();
 
-    // 처음 POST 요청 시 (write.jsp에서 넘어왔을 때) 확인 페이지 표시
-    String category = request.getParameter("category");
-    String title    = request.getParameter("title");
-    String writer   = request.getParameter("writer");
-    String content  = request.getParameter("content");
-%>
+                    if(fieldName.equals("photo") && item.getSize() > 0) {
+                        // 1. 이미지 파일인지 확인
+                        if (contentType == null || !contentType.startsWith("image/")) {
+                            out.println("<script>alert('이미지 파일만 업로드할 수 있습니다.'); history.back();</script>");
+                            return; // 처리 중단
+                        }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>작성 확인</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        h1 { color: #337ab7; }
-        .post-details { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9; }
-        .post-details p { margin: 5px 0; }
-        .buttons a, .buttons input {
-            display: inline-block;
-            padding: 10px 15px;
-            margin-right: 10px;
-            text-decoration: none;
-            font-size: 14px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
+                        // 2. 중복 방지를 위한 새로운 파일명 생성
+                        String originalFilename = item.getName();
+                        String extension = "";
+                        int dotIndex = originalFilename.lastIndexOf(".");
+                        if (dotIndex > 0) {
+                            extension = originalFilename.substring(dotIndex);
+                        }
+                        String baseName = dotIndex > 0 ? originalFilename.substring(0, dotIndex) : originalFilename;
+                        long timestamp = System.currentTimeMillis();
+                        String newFilename = baseName + "_" + timestamp + extension;
+
+                        vo.setPhoto(newFilename);
+                        File uploadedFile = new File(uploadPath + File.separator + newFilename);
+                        item.write(uploadedFile);
+                    }
+                }
+            }
+
+            // DB에 저장
+            if (dao.insertBoard(vo) == 1) {
+                response.sendRedirect("list.jsp");
+            } else {
+                out.println("<script>alert('글 작성에 실패했습니다.'); history.back();</script>");
+            }
+
+        } catch (Exception e) {
+            // e.printStackTrace(); // 서버 로그에 스택 트레이스 출력
+            // 디버깅을 위해 오류 정보를 웹 페이지에 직접 출력
+            out.println("<html><body>");
+            out.println("<h2>파일 업로드 오류 발생</h2>");
+            out.println("<hr>");
+            out.println("<b>오류 메시지:</b><br>");
+            out.println(e.getMessage());
+            out.println("<br><br><b>스택 트레이스:</b><br>");
+            out.println("<pre>");
+            e.printStackTrace(new java.io.PrintWriter(out));
+            out.println("</pre>");
+            out.println("</body></html>");
         }
-        .confirm-btn { background-color: #5cb85c; color: white; }
-        .cancel-btn { background-color: #f0ad4e; color: white; }
-    </style>
-</head>
-<body>
-    <h1>게시글 작성 확인</h1>
-    <p>아래 내용으로 게시글을 작성하시겠습니까?</p>
-
-    <div class="post-details">
-        <p><strong>카테고리:</strong> <%= category %></p>
-        <p><strong>제목:</strong> <%= title %></p>
-        <p><strong>작성자:</strong> <%= writer %></p>
-        <p><strong>내용:</strong></p>
-        <div style="white-space: pre-wrap; padding: 10px; background: #fff; border: 1px solid #ddd;"><%= content %></div>
-    </div>
-
-    <form action="write_ok.jsp" method="post">
-        <!-- 사용자가 입력한 데이터를 hidden 필드로 유지 -->
-        <input type="hidden" name="category" value="<%= category %>">
-        <input type="hidden" name="title" value="<%= title %>">
-        <input type="hidden" name="writer" value="<%= writer %>">
-        <input type="hidden" name="content" value="<%= content %>">
-        <!-- 실제 저장을 위한 액션 파라미터 -->
-        <input type="hidden" name="action" value="confirm">
-
-        <div class="buttons">
-            <input type="submit" value="확인" class="confirm-btn">
-            <a href="list.jsp" class="cancel-btn">취소</a>
-        </div>
-    </form>
-</body>
-</html>
+    }
+%>

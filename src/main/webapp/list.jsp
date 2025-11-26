@@ -54,6 +54,7 @@
         <th>Id</th>
         <th>Category</th>
         <th>Title</th>
+        <th>File</th>
         <th>Writer</th>
         <th>Content</th>
         <th>Regdate</th>
@@ -69,6 +70,7 @@
         <td><%= u.getSeq() %></td>
         <td><%= u.getCategory() %></td>
         <td><a href="view.jsp?id=<%= u.getSeq() %>"><%= u.getTitle() %></a></td>
+        <td><% if(u.getPhoto() != null && !u.getPhoto().isEmpty()) { %>📎<% } %></td>
         <td><%= u.getWriter() %></td>
         <td><%= u.getContent() %></td>
         <td><%= u.getRegdate() %></td>

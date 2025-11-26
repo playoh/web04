@@ -10,7 +10,16 @@ public class BoardVO {
     private String content;
     private Date regdate;
     private int cnt;
+    private String photo;
     public BoardVO() {
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     public int getSeq() {

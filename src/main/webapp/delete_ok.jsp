@@ -2,16 +2,34 @@
          pageEncoding="UTF-8"%>
 <%@ page import="org.example.ihateweb04.dao.BoardDAO, org.example.ihateweb04.bean.BoardVO" %>
 
+<%@ page import="java.io.File" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
+<%@ page import="org.example.ihateweb04.dao.BoardDAO, org.example.ihateweb04.bean.BoardVO" %>
+
 <%
     // POST 요청 처리 (실제 삭제 수행)
     if (request.getMethod().equalsIgnoreCase("POST")) {
         String sid = request.getParameter("seq");
         if (sid != null && !sid.isEmpty()) {
             int id = Integer.parseInt(sid);
-            BoardVO vo = new BoardVO();
-            vo.setSeq(id);
             BoardDAO boardDAO = new BoardDAO();
-            boardDAO.deleteBoard(vo);
+
+            // 파일 삭제를 위해 먼저 정보를 가져옴
+            BoardVO vo = boardDAO.getBoard(id);
+            if (vo != null) {
+                // 파일이 존재하면 서버에서 삭제
+                String photo = vo.getPhoto();
+                if (photo != null && !photo.isEmpty()) {
+                    String uploadPath = application.getRealPath("upload");
+                    File file = new File(uploadPath + File.separator + photo);
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                }
+                // DB에서 게시물 삭제
+                boardDAO.deleteBoard(vo);
+            }
         }
         response.sendRedirect("list.jsp");
         return; // POST 처리 후 페이지의 나머지 부분 렌더링을 방지
