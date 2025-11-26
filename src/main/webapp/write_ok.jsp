@@ -5,7 +5,6 @@
 <%@ page import="org.example.ihateweb04.dao.BoardDAO" %>
 <%@ page import="java.io.File" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.lang.System" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
@@ -54,7 +53,7 @@
                             extension = originalFilename.substring(dotIndex);
                         }
                         String baseName = dotIndex > 0 ? originalFilename.substring(0, dotIndex) : originalFilename;
-                        long timestamp = System.currentTimeMillis();
+                        long timestamp = new java.util.Date().getTime();
                         String newFilename = baseName + "_" + timestamp + extension;
 
                         vo.setPhoto(newFilename);
