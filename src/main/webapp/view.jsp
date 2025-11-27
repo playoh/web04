@@ -61,7 +61,7 @@
     <% if(u.getPhoto() != null && !u.getPhoto().isEmpty()) { %>
     <tr>
         <td colspan="2">
-            <img src="<%= request.getContextPath() %>/webapp/upload/<%= u.getPhoto() %>" alt="uploaded photo" class="post-image">
+            <img src="<%= request.getContextPath() %>/upload/<%= u.getPhoto() %>" alt="uploaded photo" class="post-image">
         </td>
     </tr>
     <% } %>
