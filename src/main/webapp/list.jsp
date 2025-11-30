@@ -2,15 +2,11 @@
 <%@ page import="org.example.ihateweb04.dao.BoardDAO, org.example.ihateweb04.bean.BoardVO, java.util.List, java.net.URLDecoder" %>
 
 <%
+    request.setCharacterEncoding("UTF-8");
     // 파라미터 받기
     String category = request.getParameter("category");
     String searchCondition = request.getParameter("searchCondition");
     String keyword = request.getParameter("keyword");
-
-    // GET 요청으로 들어온 한글 파라미터 인코딩 처리
-    if (keyword != null && request.getMethod().equalsIgnoreCase("get")) {
-        keyword = new String(keyword.getBytes("ISO-8859-1"), "UTF-8");
-    }
 
     // null 처리
     if (category == null) category = "all";
@@ -127,7 +123,7 @@
         <td><%= u.getSeq() %></td>
         <td><%= u.getCategory() %></td>
         <td><a href="view.jsp?id=<%= u.getSeq() %>"><%= u.getTitle() %></a></td>
-        <td><% if(u.getPhoto() != null && !u.getPhoto().isEmpty()) { %>📎<% } %></td>
+        <td><% if(u.getPhoto() != null && !u.getPhoto().isEmpty()) { %><img src="<%= request.getContextPath() %>/upload/<%= u.getPhoto() %>" alt="thumbnail" style="max-width:60px; max-height:60px;"><% } %></td>
         <td><%= u.getWriter() %></td>
         <td><%= u.getContent() %></td>
         <td><%= u.getRegdate() %></td>

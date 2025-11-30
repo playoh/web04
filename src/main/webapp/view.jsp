@@ -57,6 +57,7 @@
     <tr><th>Category:</th><td><%=u.getCategory()%></td></tr>
     <tr><th>Title:</th><td><%= u.getTitle()%></td></tr>
     <tr><th>Writer:</th><td><%= u.getWriter()%></td></tr>
+    <tr><th>조회수:</th><td><%= u.getCnt()%></td></tr>
     <tr><td colspan="2" class="post-content"><%= u.getContent()%></td></tr>
     <% if(u.getPhoto() != null && !u.getPhoto().isEmpty()) { %>
     <tr>

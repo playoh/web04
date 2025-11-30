@@ -15,12 +15,26 @@ public class BoardDAO {
     PreparedStatement stmt = null;
     ResultSet rs = null;
 
-    private final String BOARD_INSERT = "insert into BOARD (category, title, writer, content, photo) values (?,?,?,?,?)";
+    private final String BOARD_INSERT = "insert into BOARD (category, title, writer, content, photo, cnt) values (?,?,?,?,?,0)";
     private final String BOARD_UPDATE = "update BOARD set category=?, title=?, writer=?, content=?, photo=? where seq=?";
     private final String BOARD_DELETE = "delete from BOARD  where seq=?";
+    private final String BOARD_ADD_CNT = "update BOARD set cnt=cnt+1 where seq=?";
     private final String BOARD_GET = "select * from BOARD  where seq=?";
     // private final String BOARD_LIST = "select * from BOARD order by seq desc"; // No longer needed
 
+    public void addCnt(int seq){
+        System.out.println("===> JDBC로 addCnt() 기능 처리");
+        try {
+            conn = JDBCUtil.getConnection();
+            stmt = conn.prepareStatement(BOARD_ADD_CNT);
+            stmt.setInt(1, seq);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            JDBCUtil.close(stmt, conn);
+        }
+    }
     public int insertBoard(BoardVO vo) {
         System.out.println("===> JDBC로 insertBoard() 기능 처리");
         try {
@@ -77,6 +91,7 @@ public class BoardDAO {
     }
 
     public BoardVO getBoard(int seq) {
+        addCnt(seq);
         BoardVO one = new BoardVO();
         System.out.println("===> JDBC로 getBoard() 기능 처리");
         try {
