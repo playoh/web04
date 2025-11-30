@@ -6,7 +6,7 @@
 
     <servlet>
         <servlet-name>FileServlet</servlet-name>
-        <servlet-class>org.example.ihateweb04.FileServlet</servlet-class>
+        <servlet-class>org.example.ihateweb04.FileUpload</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>FileServlet</servlet-name>

@@ -1,7 +1,6 @@
 package org.example.ihateweb04;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,7 +11,7 @@ import java.io.OutputStream;
 import java.net.URLDecoder;
 
 // Instead of using web.xml, we can use annotation. But let's stick to web.xml for now to be explicit.
-public class FileServlet extends HttpServlet {
+public class FileUpload extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String requestedFile = request.getPathInfo();
         if (requestedFile == null) {
